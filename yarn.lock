@@ -3748,7 +3748,7 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
-mweb3@^1.1.0:
+mweb3@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/mweb3/-/mweb3-1.0.0.tgz#de793ea6fd5da0e97d5f91afa1a4a74a4754060a"
   integrity sha512-sg+//dqclopEkbCgFYNJU2dri5LplobktgeGIu1Ps1b71wH7/JGMpQVpOyJYk6Wr2B1TnUxluCJoSJuZRP/lYQ==
