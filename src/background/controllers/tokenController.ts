@@ -18,7 +18,7 @@ const INIT_VALUES = {
   tokens: undefined,
   getBalancesInterval: undefined,
 };
-const mweb3 = new Mweb3('null');
+const mweb3 = new Mweb3('window.metrimask.rpcProvider');
 
 export default class TokenController extends IController {
   private static GET_BALANCES_INTERVAL_MS: number = 60000;

@@ -5,8 +5,8 @@ const updateFields = () => {
   const { args } = request;
   const to = args[0];
   const amount = args[2] || 0;
-  const gasLimit = args[3] || 200000;
-  const gasPrice = args[4] ? Number(args[4]) : 0.0000004;
+  const gasLimit = args[3] || 250000;
+  const gasPrice = args[4] ? Number(args[4]) : 0.00005000;
   const maxTxFee = Math.round(gasLimit * gasPrice * 1000) / 1000;
 
   document.getElementById('from-field').innerText = fromAddress;

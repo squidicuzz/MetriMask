@@ -54,7 +54,6 @@
   },
   "dependencies": {
     "@material-ui/icons": "^1.1.0",
-    "@types/bip39": "^2.4.0",
     "@types/deep-equal": "^1.0.1",
     "@types/history": "^4.6.2",
     "@types/lodash": "^4.14.110",
@@ -63,6 +62,7 @@
     "@types/secp256k1": "^3.5.0",
     "axios": "^0.18.0",
     "bignumber.js": "^7.2.1",
+    "bip39": "^3.0.4",
     "chrome-call": "^3.0.0",
     "classnames": "^2.2.6",
     "deep-equal": "^1.0.1",

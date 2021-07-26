@@ -110,7 +110,7 @@ window.addEventListener('message', handleMessage, false);
 ```
 
 ### Using Mweb3
-You may also use our Mweb3 convenience library to make `sendtocontract` or `callcontract` calls. See the instructions in the Github repo here: https://github.com/TheLindaProjectInc/Mweb3.js
+You may also use our Mweb3 convenience library to make `sendtocontract` or `callcontract` calls. See the instructions in the Github repo here: https://github.com/TheLindaProjectInc/Mweb3-js
 
 ### Using RegTest
 You can connect MetriMask to regtest. You will need to set the following in your metrixcore-node.json

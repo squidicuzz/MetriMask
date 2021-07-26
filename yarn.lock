@@ -73,12 +73,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/bip39@^2.4.0":
-  version "2.4.0"
-  resolved "http://registry.npm.taobao.org/@types/bip39/download/@types/bip39-2.4.0.tgz#eee31a14abc8ebbb41a1ff14575c447b18346cbc"
-  dependencies:
-    "@types/node" "*"
-
 "@types/chrome@^0.0.63":
   version "0.0.63"
   resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.63.tgz#b86fc8c859ec6ae0bf929b4504d7ac47d579006d"
@@ -747,7 +741,7 @@ bip38@^3.1.1:
     safe-buffer "~5.1.1"
     scryptsy "^2.1.0"
 
-bip39@^3.0.3:
+bip39@^3.0.3, bip39@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/bip39/-/bip39-3.0.4.tgz#5b11fed966840b5e1b8539f0f54ab6392969b2a0"
   integrity sha512-YZKQlb752TrUWqHWj7XAwCSjYEgGAk+/Aas3V7NyjQeZYsztO8JnQUaCWhcnL4T+jL8nvB8typ2jRPzTlgugNw==
