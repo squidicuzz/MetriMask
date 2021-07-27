@@ -22,6 +22,7 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
   loginButton: {
     height: theme.button.lg.height,
     borderRadius: theme.button.lg.radius,
+    marginBottom: '16px',
   },
 });
 
