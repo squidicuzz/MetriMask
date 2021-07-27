@@ -67,7 +67,7 @@
     "classnames": "^2.2.6",
     "deep-equal": "^1.0.1",
     "metrixjs-lib": "^1.0.0",
-    "metrixjs-wallet": "^0.2.3",
+    "metrixjs-wallet": "^0.2.10",
     "mobx": "^5.0.3",
     "mobx-react": "^5.2.3",
     "mobx-react-router": "^4.0.4",

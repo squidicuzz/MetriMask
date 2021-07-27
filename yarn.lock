@@ -763,7 +763,7 @@ bitcoin-ops@^1.3.0:
   resolved "https://registry.yarnpkg.com/bitcoin-ops/-/bitcoin-ops-1.4.1.tgz#e45de620398e22fd4ca6023de43974ff42240278"
   integrity sha512-pef6gxZFztEhaE9RY9HmWVmiIHqCb2OyS4HPKkpc6CIiiOa3Qmuoylxc5P2EkU3w+5eTSifI9SEZC88idAIGow==
 
-bitcoinjs-lib@^3.3.2:
+bitcoinjs-lib@^3.3.1, bitcoinjs-lib@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/bitcoinjs-lib/-/bitcoinjs-lib-3.3.2.tgz#780c9c53ecb1222adb463b58bef26386067b609a"
   integrity sha512-l5qqvbaK8wwtANPf6oEffykycg4383XgEYdia1rI7/JpGf1jfRWlOUCvx5TiTZS7kyIvY4j/UhIQ2urLsvGkzw==
@@ -3585,10 +3585,10 @@ metrixjs-lib@^1.0.0:
     qtum-opcodes "^1.0.0"
     safe-buffer "^5.1.1"
 
-metrixjs-wallet@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/metrixjs-wallet/-/metrixjs-wallet-0.2.3.tgz#d852e88b9daa7bc6d2b70a50cb53d7be5f994097"
-  integrity sha512-uGYmAPBJTWnFR8oyQRBXmLujH1bAE1KrqE6M+/rjfdM5R/+pKnGwW52hO9JqBofbXXZd2GisIRlMqRInZ85BBQ==
+metrixjs-wallet@^0.2.10:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/metrixjs-wallet/-/metrixjs-wallet-0.2.10.tgz#842bfffca97ebec4c634ac8fe0ff58e994ca6cb6"
+  integrity sha512-arAm8FdAkMORO52UwO4Da4dEb4nRjHm5Tw1CvZYLCtJ4JjU4gOmvqV5oNHu95qcFQJFZ0W8q1/q2FtquEB1kjw==
   dependencies:
     "@types/bip38" "^2.0.1"
     "@types/secp256k1" "^4.0.2"
@@ -3597,6 +3597,7 @@ metrixjs-wallet@^0.2.3:
     bignumber.js "^9.0.1"
     bip38 "^3.1.1"
     bip39 "^3.0.3"
+    bitcoinjs-lib "^3.3.1"
     bs58check "^2.1.2"
     buffer "^6.0.3"
     coinselect "^3.1.11"
