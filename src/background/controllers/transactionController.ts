@@ -117,7 +117,7 @@ export default class TransactionController extends IController {
         id: txid,
         timestamp: moment(new Date(time * 1000)).format('MM-DD-YYYY, HH:mm'),
         confirmations,
-        amount: round(amount, 8),
+        amount: amount > 0 ? round(amount / 1E8, 8) : round(amount, 8),
       });
     });
   }

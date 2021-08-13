@@ -21,7 +21,7 @@ This will populate the `window.metrimask` object in your webpage. The `window.me
     loggedIn: true, 
     name: "2", 
     network: "TestNet", 
-    address: "qJHp6dUSmDShpEEMmwxqHPo7sFSdydSkPM", 
+    address: "mNNiiJsBnPUZu4NwNtPaK9zyxD5ghV1By8", 
     balance: 49.10998413 
   }
 }
@@ -68,7 +68,7 @@ RPC calls can be directly made via `MetriMaskProvider` which is available to any
 
 ```
 // callcontract
-const contractAddress = 'a6dd0b0399dc6162cedde85ed50c6fa4a0dd44f1';
+const contractAddress = 'ade0d0851168114b103d1cd891506ba562b19522';
 const data = '06fdde03';
 window.metrimask.rpcProvider.rawCall(
   'callcontract',
@@ -76,11 +76,11 @@ window.metrimask.rpcProvider.rawCall(
 ).then((res) => console.log(res));
 
 // sendtocontract
-const contractAddress = '49a941c5259e4e6ef9ac4a2a6716c1717ce0ffb6';
+const contractAddress = 'ade0d0851168114b103d1cd891506ba562b19522';
 const data = 'd0821b0e0000000000000000000000000000000000000000000000000000000000000001';
 const metrixAmt = 1; // optional. defaults to 0.
 const gasLimit = 200000; // optional. defaults to 200000.
-const gasPrice = 40; // optional. defaults to 40 (satoshi).
+const gasPrice = 5000; // optional. defaults to 5000 (satoshi).
 window.metrimaskProvider.rawCall(
   'sendtocontract',
   [contractAddress, data, metrixAmt, gasLimit, gasPrice],
@@ -110,7 +110,7 @@ window.addEventListener('message', handleMessage, false);
 ```
 
 ### Using Mweb3
-You may also use our Mweb3 convenience library to make `sendtocontract` or `callcontract` calls. See the instructions in the Github repo here: https://github.com/TheLindaProjectInc/Mweb3-js
+You may also use our Mweb3 convenience library to make `sendtocontract` or `callcontract` calls. See the instructions in the Github repo here: https://github.com/TheLindaProjectInc/mweb3-js
 
 ### Using RegTest
 You can connect MetriMask to regtest. You will need to set the following in your metrixcore-node.json
