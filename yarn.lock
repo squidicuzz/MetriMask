@@ -3585,10 +3585,10 @@ metrixjs-lib@^1.0.0:
     qtum-opcodes "^1.0.0"
     safe-buffer "^5.1.1"
 
-metrixjs-wallet@^0.2.10:
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/metrixjs-wallet/-/metrixjs-wallet-0.2.10.tgz#842bfffca97ebec4c634ac8fe0ff58e994ca6cb6"
-  integrity sha512-arAm8FdAkMORO52UwO4Da4dEb4nRjHm5Tw1CvZYLCtJ4JjU4gOmvqV5oNHu95qcFQJFZ0W8q1/q2FtquEB1kjw==
+metrixjs-wallet@^0.2.17:
+  version "0.2.17"
+  resolved "https://registry.yarnpkg.com/metrixjs-wallet/-/metrixjs-wallet-0.2.17.tgz#5942e3e098e2cc4f3d4a020b242cec80c9874c8f"
+  integrity sha512-sNvOJ9876OeIcHm33h/e/5vQ7znKJBSI9+2E2yfeLIup9P+ZHqG4J7hZjK4ySDMkM6g5vtxvBcaowlKgCUwFtQ==
   dependencies:
     "@types/bip38" "^2.0.1"
     "@types/secp256k1" "^4.0.2"
