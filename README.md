@@ -81,7 +81,7 @@ const data = 'd0821b0e0000000000000000000000000000000000000000000000000000000000
 const metrixAmt = 1; // optional. defaults to 0.
 const gasLimit = 200000; // optional. defaults to 200000.
 const gasPrice = 5000; // optional. defaults to 5000 (satoshi).
-window.metrimaskProvider.rawCall(
+window.metrimask.rpcProvider.rawCall(
   'sendtocontract',
   [contractAddress, data, metrixAmt, gasLimit, gasPrice],
 );
