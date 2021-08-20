@@ -6,14 +6,14 @@ const updateFields = () => {
   const to = args[0];
   const amount = args[2] || 0;
   const gasLimit = args[3] || 250000;
-  const gasPrice = args[4] ? Number(args[4]) : 0.00005000;
+  const gasPrice = args[4] ? Number(args[4]) : 5000;
   const maxTxFee = Math.round(gasLimit * gasPrice * 1000) / 1000;
 
   document.getElementById('from-field').innerText = fromAddress;
   document.getElementById('to-field').innerText = to;
   document.getElementById('amount-field').innerText = amount;
   document.getElementById('gas-limit-field').innerText = gasLimit;
-  document.getElementById('gas-price-field').innerText = gasPrice.toFixed(8);
+  document.getElementById('gas-price-field').innerText = gasPrice;
   document.getElementById('max-tx-fee-field').innerText = maxTxFee;
   document.getElementById('raw-tx-field').innerText = JSON.stringify(request);
 };

@@ -20,9 +20,9 @@ const INIT_VALUES = {
   transactionSpeed: TRANSACTION_SPEED.NORMAL,
   transactionSpeeds: [TRANSACTION_SPEED.SLOW, TRANSACTION_SPEED.NORMAL, TRANSACTION_SPEED.FAST],
   gasLimit: Config.TRANSACTION.DEFAULT_GAS_LIMIT,
-  gasPrice: Config.TRANSACTION.DEFAULT_GAS_PRICE * 1e8,
+  gasPrice: Config.TRANSACTION.DEFAULT_GAS_PRICE * 1e8, // MRX satoshi/gas
   gasLimitRecommendedAmount: Config.TRANSACTION.DEFAULT_GAS_LIMIT,
-  gasPriceRecommendedAmount: Config.TRANSACTION.DEFAULT_GAS_PRICE * 1e8, // satoshi/gas
+  gasPriceRecommendedAmount: Config.TRANSACTION.DEFAULT_GAS_PRICE * 1e8, // MRX satoshi/gas
 };
 
 export default class SendStore {
