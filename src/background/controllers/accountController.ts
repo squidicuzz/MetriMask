@@ -398,9 +398,9 @@ export default class AccountController extends IController {
     */
     try {
       const rates = {
-        [TRANSACTION_SPEED.FAST]: 1000000,
-        [TRANSACTION_SPEED.NORMAL]: 1000000,
-        [TRANSACTION_SPEED.SLOW]: 1000000,
+        [TRANSACTION_SPEED.FAST]: 1100000,
+        [TRANSACTION_SPEED.NORMAL]: 1100000,
+        [TRANSACTION_SPEED.SLOW]: 1100000,
       };
       const feeRate = rates[transactionSpeed]; // satoshi/byte; 1000000 satoshi/byte == 10 MRX/KB
       if (!feeRate) {
