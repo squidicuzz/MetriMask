@@ -50,6 +50,18 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  receiveContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    display: 'inline-flex',
+    alignItems: 'baseline',
+  },
+  addrCopyButton: {
+    width: '2rem',
+    minHeight: '0px',
+    minWidth: '0px',
+    flex: 'none',
+  },
 });
 
 export default styles;

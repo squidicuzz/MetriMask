@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Typography, withStyles, WithStyles } from '@material-ui/core';
+import { Button, Typography, withStyles, WithStyles } from '@material-ui/core';
 import QRCode from 'qrcode.react';
 
 import styles from './styles';
@@ -28,7 +28,14 @@ class Receive extends Component<WithStyles & IProps, {}> {
         <NavBar hasBackButton title="Receive" />
         <div className={classes.contentContainer}>
           <Typography className={classes.accountName}>{loggedInAccountName}</Typography>
-          <Typography className={classes.accountAddress}>{info.addrStr}</Typography>
+          <div className={classes.receiveContainer}>
+            <Typography className={classes.accountAddress}>{info.addrStr}</Typography>
+            <Button className={classes.addrCopyButton}
+            id="addrCopyButton"
+            onClick={() => {navigator.clipboard.writeText(info.addrStr); }}>
+              <img src="images/clipboard-solid.svg" />
+            </Button>
+          </div>
           <div className={classes.amountContainer}>
             <Typography className={classes.tokenAmount}>{info.balance}</Typography>
             <Typography className={classes.token}>MRX</Typography>
