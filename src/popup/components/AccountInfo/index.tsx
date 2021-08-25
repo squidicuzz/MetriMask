@@ -28,7 +28,13 @@ class AccountInfo extends Component<WithStyles & IProps, {}> {
 
   public render() {
     const { classes, hasRightArrow } = this.props;
-    const { loggedInAccountName, info, metrixBalanceUSD, networkBalAnnotation } = this.props.store!.sessionStore;
+    const {
+      loggedInAccountName,
+      info,
+      metrixBalanceUSD,
+      networkBalAnnotation,
+      hexAddr
+    } = this.props.store!.sessionStore;
 
     if (!loggedInAccountName || !info) {
       return null;
@@ -37,7 +43,8 @@ class AccountInfo extends Component<WithStyles & IProps, {}> {
     return info && (
       <div className={classes.root}>
         <Typography className={classes.acctName}>{loggedInAccountName}</Typography>
-        <Typography className={classes.address}>{info.addrStr}</Typography>
+        <Typography className={classes.address}>Address: {info.addrStr}</Typography>
+        <Typography className={classes.address}>Hex: {hexAddr}</Typography>
         <div className={classes.amountContainer}>
           <Typography className={classes.tokenAmount}>{info.balance}</Typography>
           <Typography className={classes.token}>MRX</Typography>

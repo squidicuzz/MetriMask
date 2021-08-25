@@ -1,6 +1,7 @@
 import { observable, action, computed } from 'mobx';
 import { Insight } from 'metrixjs-wallet';
 import { isUndefined } from 'lodash';
+const { Mweb3 } = require('mweb3');
 
 import { MESSAGE_TYPE, NETWORK_NAMES } from '../../constants';
 import QryNetwork from '../../models/QryNetwork';
@@ -12,11 +13,14 @@ const INIT_VALUES = {
   metrixUSD: undefined,
 };
 
+const mweb3 = new Mweb3('window.metrimask.rpcProvider');
+
 export default class SessionStore {
   @observable public networkIndex: number = INIT_VALUES.networkIndex;
   @observable public networks: QryNetwork[] = [];
   @observable public loggedInAccountName?: string = INIT_VALUES.loggedInAccountName;
   @observable public info?: Insight.IGetInfo = INIT_VALUES.info;
+  @observable public hexAddress?: string = '';
   @computed public get metrixBalanceUSD() {
     return isUndefined(this.metrixUSD) ? 'Loading...' : `$${this.metrixUSD} USD`;
   }
@@ -28,6 +32,23 @@ export default class SessionStore {
   }
   @computed public get networkBalAnnotation() {
     return  this.isMainNet ? '' : `(${this.networkName}, no value)`;
+  }
+
+  @computed public get hexAddr() {
+    if (this.info) {
+      const addr = this.info.addrStr;
+      this.getHexAddress(addr).then((address) => this.hexAddress = address.substring(24, 64));
+      return this.hexAddress;
+    }
+    return this.hexAddress;
+  }
+
+  public async getHexAddress(address: string) {
+    try {
+      return await mweb3.encoder.addressToHex(address);
+    } catch(e) {
+      console.error(e);
+    }
   }
 
   private metrixUSD?: number = INIT_VALUES.metrixUSD;
