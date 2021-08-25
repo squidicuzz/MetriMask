@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 prefix='./dist/commons.'
 suffix='.js'
