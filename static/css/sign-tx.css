@@ -62,6 +62,7 @@ body {
 }
 
 .amount {
+  width: 88px;
   font-size: 16px;
   line-height: 20px;
   color: rgba(0, 0, 0, 0.8);
