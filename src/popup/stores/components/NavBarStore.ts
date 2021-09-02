@@ -27,6 +27,13 @@ export default class NavBarStore {
   }
 
   @action
+  public fullScreen = () => {
+    chrome.management.getSelf((info) => {
+      chrome.tabs.create({url: 'chrome-extension://'+ info.id +'/popup.html'});
+    });
+  }
+
+  @action
   public routeToSettings = () => {
     this.reset();
     this.app.routerStore.push('/settings');
@@ -38,4 +45,5 @@ export default class NavBarStore {
     this.app.routerStore.push('/loading');
     chrome.runtime.sendMessage({ type: MESSAGE_TYPE.LOGOUT });
   }
+
 }

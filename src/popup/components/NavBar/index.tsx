@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { inject, observer } from 'mobx-react';
 
 import { Typography, Menu, MenuItem, IconButton, withStyles } from '@material-ui/core';
-import { ArrowBack, Settings } from '@material-ui/icons';
+import { ArrowBack, Settings, Fullscreen } from '@material-ui/icons';
 import cx from 'classnames';
 
 import DropDownMenu from '../DropDownMenu';
@@ -42,14 +42,23 @@ const NavBar: React.SFC<IProps> = inject('store')(observer((props: IProps) => {
       </div>
       {hasNetworkSelector && (
         <DropDownMenu
-          onSelect={navBarStore.changeNetwork}
-          selections={sessionStore.networks.map((net: QryNetwork) => net.name)}
-          selectedIndex={sessionStore.networkIndex}
+        onSelect={navBarStore.changeNetwork}
+        selections={sessionStore.networks.map((net: QryNetwork) => net.name)}
+        selectedIndex={sessionStore.networkIndex}
         />
       )}
+      <FullScreenButton {...props} />
     </div>
   );
 }));
+
+const FullScreenButton: React.SFC<IProps> = ({ classes, isDarkTheme, store: { navBarStore }}: any) => (
+  <IconButton color="primary" onClick={() => navBarStore.fullScreen() }
+  className={classes.fullScreenIconButton}
+  >
+    <Fullscreen className={cx(classes.fullScreenButton, isDarkTheme ? 'white' : '')} />
+  </IconButton>
+);
 
 const BackButton: React.SFC<IProps> = ({ classes, isDarkTheme, store: { routerStore } }: any) => (
   <IconButton onClick={() => routerStore.goBack()} className={classes.backIconButton}>

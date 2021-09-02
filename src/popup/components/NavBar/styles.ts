@@ -24,6 +24,16 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     width: theme.icon.size,
     height: theme.icon.size,
   },
+  fullScreenIconButton: {
+    width: theme.icon.size,
+    height: theme.icon.size,
+  },
+  fullScreenButton: {
+    fontSize: theme.font.md,
+    '&.white': {
+      color: theme.palette.secondary.main,
+    },
+  },
   settingsButton: {
     fontSize: 18,
     '&.white': {
