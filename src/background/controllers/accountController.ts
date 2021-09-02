@@ -88,6 +88,10 @@ export default class AccountController extends IController {
     this.main.crypto.derivePasswordHash(password);
   }
 
+  public confirmLogin = (password: string) => {
+    this.main.crypto.derivePasswordHash(password);
+  }
+
   public finishLogin = async () => {
     if (!this.hasAccounts) {
       // New user. No created wallets yet. No need to validate.
@@ -311,6 +315,17 @@ export default class AccountController extends IController {
     );
   }
 
+  getPrivateKey() {
+    if (!this.loggedInAccount || !this.loggedInAccount.privateKeyHash) return;
+    const keyHash = this.recoverFromPrivateKeyHash(this.loggedInAccount.privateKeyHash);
+    chrome.runtime.sendMessage({
+      type: MESSAGE_TYPE.GET_PRIVATE_KEY,
+      walletName: this.loggedInAccount.name,
+      privateKey: keyHash.toWIF()
+    });
+
+  }
+
   /*
   * Validates a password by decrypting a private key hash into a wallet instance.
   * @return Is the password valid.
@@ -446,6 +461,9 @@ export default class AccountController extends IController {
         case MESSAGE_TYPE.LOGIN:
           this.login(request.password);
           break;
+        case MESSAGE_TYPE.CONFIRM_PASSWORD:
+          this.confirmLogin(request.password);
+          break;
         case MESSAGE_TYPE.IMPORT_MNEMONIC:
           await this.importMnemonic(request.accountName, request.mnemonicPrivateKey);
           break;
@@ -454,6 +472,9 @@ export default class AccountController extends IController {
           break;
         case MESSAGE_TYPE.SAVE_TO_FILE:
           this.saveToFile(request.accountName, request.mnemonicPrivateKey);
+          break;
+        case MESSAGE_TYPE.SAVE_PRIVATE_KEY_TO_FILE:
+          this.saveToFile(request.accountName, request.key);
           break;
         case MESSAGE_TYPE.ACCOUNT_LOGIN:
           await this.loginAccount(request.selectedWalletName);
