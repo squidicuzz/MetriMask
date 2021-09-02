@@ -29,7 +29,7 @@ export default class NavBarStore {
   @action
   public fullScreen = () => {
     chrome.management.getSelf((info) => {
-      chrome.tabs.create({url: 'chrome-extension://'+ info.id +'/popup.html'});
+      chrome.tabs.create({url: 'chrome-extension://'+ info.id +'/home.html'});
     });
   }
 
