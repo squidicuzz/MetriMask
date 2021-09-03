@@ -19,7 +19,7 @@ export default class MainContainerStore {
 
   @action
   private handleMessage = (request: any) => {
-    const { loginStore, importStore, routerStore }: any = this.app;
+    const { loginStore, importStore, routerStore, SavePrivateKeyStore }: any = this.app;
     switch (request.type) {
       case MESSAGE_TYPE.ROUTE_LOGIN:
         routerStore.push('/login');
@@ -33,6 +33,17 @@ export default class MainContainerStore {
         loginStore.invalidPassword = true;
         routerStore.push('/login');
         break;
+
+      case MESSAGE_TYPE.LOGIN_CONFIRM:
+      case MESSAGE_TYPE.LOGIN_CONFIRM_SUCCESS:
+          SavePrivateKeyStore.invalidPassword = !1;
+          routerStore.push('/export-wallet');
+          break;
+
+      case MESSAGE_TYPE.LOGIN_CONFIRM_FAILURE:
+          SavePrivateKeyStore.invalidPassword = !0;
+          routerStore.push('/export-wallet');
+          break;
 
       case MESSAGE_TYPE.LOGIN_SUCCESS_WITH_ACCOUNTS:
         routerStore.push('/account-login');

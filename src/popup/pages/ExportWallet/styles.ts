@@ -6,6 +6,11 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column'
   },
+  loginContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: theme.padding.md
+  },
   contentContainer: {
     flex: 1,
     display: 'flex',
@@ -49,7 +54,15 @@ const styles: StyleRulesCallback = (theme: Theme) => ({
     '&.marginBottom': {
         marginBottom: theme.padding.sm
     }
-  }
+  },
+  passwordField: {
+    marginBottom: theme.padding.md,
+  },
+  loginButton: {
+    height: theme.button.lg.height,
+    borderRadius: theme.button.lg.radius,
+    marginBottom: '16px',
+  },
 });
 
 export default styles;

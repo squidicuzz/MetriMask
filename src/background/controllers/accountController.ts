@@ -90,6 +90,7 @@ export default class AccountController extends IController {
 
   public confirmLogin = (password: string) => {
     this.main.crypto.derivePasswordHash(password);
+    this.finishConfirmLogin();
   }
 
   public finishLogin = async () => {
@@ -106,6 +107,22 @@ export default class AccountController extends IController {
     }
 
     chrome.runtime.sendMessage({ type: MESSAGE_TYPE.LOGIN_FAILURE });
+  }
+
+  public finishConfirmLogin = async () => {
+    if (!this.hasAccounts) {
+      this.routeToAccountPage();
+      return;
+    }
+
+    const isPwValid = await this.validatePassword();
+    if (isPwValid) {
+      this.getPrivateKey();
+      this.routeToSavePrivateKeyPage();
+      return;
+    }
+
+    chrome.runtime.sendMessage({ type: MESSAGE_TYPE.LOGIN_CONFIRM_FAILURE });
   }
 
   /*
@@ -253,6 +270,10 @@ export default class AccountController extends IController {
       // Accounts found, route to Account Login page
       chrome.runtime.sendMessage({ type: MESSAGE_TYPE.LOGIN_SUCCESS_WITH_ACCOUNTS });
     }
+  }
+
+  public routeToSavePrivateKeyPage = () => {
+    chrome.runtime.sendMessage({ type: MESSAGE_TYPE.LOGIN_CONFIRM_SUCCESS });
   }
 
   /*

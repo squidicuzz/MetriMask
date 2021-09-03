@@ -1,20 +1,25 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 
 import AppStore from './AppStore';
+import { isEmpty } from 'lodash';
 import { MESSAGE_TYPE } from '../../constants';
 
 const INIT_VALUES = {
   privateKey: '',
   walletName: '',
   password: '',
-  invalidPassword: false
+  invalidPassword: undefined
 };
 
 export default class SavePrivateKeyStore {
   @observable public privateKey: string = INIT_VALUES.privateKey;
   @observable public password: string = INIT_VALUES.password;
-  @observable public invalidPassword: boolean = INIT_VALUES.invalidPassword;
+  @observable public invalidPassword?: boolean = INIT_VALUES.invalidPassword;
   public walletName: string = INIT_VALUES.walletName;
+
+  @computed public get error(): boolean {
+    return isEmpty(this.password);
+  }
 
   private app: AppStore;
 
@@ -28,22 +33,21 @@ export default class SavePrivateKeyStore {
     chrome.runtime.onMessage.addListener(this.handleMessage);
   }
 
-  @action
   public deinit = () => {
     this.reset();
     chrome.runtime.onMessage.removeListener(this.handleMessage);
 
   }
 
-  @action
   confirmLogin = () => {
-    this.app.routerStore.push('/loading'), chrome.runtime.sendMessage({
-        type: MESSAGE_TYPE.CONFIRM_PASSWORD,
-        password: this.password
-    });
+    if (this.error === false) {
+      this.app.routerStore.push('/loading'), chrome.runtime.sendMessage({
+          type: MESSAGE_TYPE.CONFIRM_PASSWORD,
+          password: this.password
+      });
+    }
   }
 
-  @action
   savePrivateKey = () => {
     this.app.routerStore.push('/loading'), chrome.runtime.sendMessage({
         type: MESSAGE_TYPE.SAVE_PRIVATE_KEY_TO_FILE,
