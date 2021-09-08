@@ -64,7 +64,7 @@ export default class CryptoController extends IController {
   /*
   * Derives the password hash with the password input.
   */
-  public derivePasswordHash = (password: string) => {
+  public derivePasswordHash = (password: string, finish: () => {}) => {
     if (!this.appSalt) {
       throw Error('appSalt should not be empty');
     }
@@ -89,7 +89,7 @@ export default class CryptoController extends IController {
           throw Error('scrypt failed to calculate derivedKey');
         }
         this.passwordHash = e.data.passwordHash;
-        this.main.account.finishLogin();
+        finish();
       };
     }
   }

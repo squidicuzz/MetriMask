@@ -17,6 +17,10 @@ export default class SavePrivateKeyStore {
   @observable public invalidPassword?: boolean = INIT_VALUES.invalidPassword;
   public walletName: string = INIT_VALUES.walletName;
 
+  @computed public get disabled(): boolean {
+    return this.password.length === 0 ? true : false;
+  }
+
   @computed public get error(): boolean {
     return isEmpty(this.password);
   }
@@ -27,7 +31,6 @@ export default class SavePrivateKeyStore {
     this.app = app;
   }
 
-
   @action
   public init = () => {
     chrome.runtime.onMessage.addListener(this.handleMessage);
@@ -36,12 +39,12 @@ export default class SavePrivateKeyStore {
   public deinit = () => {
     this.reset();
     chrome.runtime.onMessage.removeListener(this.handleMessage);
-
   }
 
   confirmLogin = () => {
     if (this.error === false) {
-      this.app.routerStore.push('/loading'), chrome.runtime.sendMessage({
+      this.app.routerStore.push('/loading');
+      chrome.runtime.sendMessage({
           type: MESSAGE_TYPE.CONFIRM_PASSWORD,
           password: this.password
       });
@@ -49,7 +52,8 @@ export default class SavePrivateKeyStore {
   }
 
   savePrivateKey = () => {
-    this.app.routerStore.push('/loading'), chrome.runtime.sendMessage({
+    this.app.routerStore.push('/loading');
+    chrome.runtime.sendMessage({
         type: MESSAGE_TYPE.SAVE_PRIVATE_KEY_TO_FILE,
         accountName: this.walletName,
         key: this.privateKey
@@ -63,8 +67,9 @@ export default class SavePrivateKeyStore {
   private handleMessage = (request: any) => {
     switch (request.type) {
       case MESSAGE_TYPE.GET_PRIVATE_KEY:
-        this.walletName = request.walletName;
-        this.privateKey = request.privateKey;
+        const { privateKey, walletName } = request;
+        this.walletName = walletName;
+        this.privateKey = privateKey;
         break;
       default:
         break;

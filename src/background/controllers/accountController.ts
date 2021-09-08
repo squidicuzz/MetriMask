@@ -85,12 +85,11 @@ export default class AccountController extends IController {
   */
   public login = async (password: string) => {
     this.main.crypto.generateAppSaltIfNecessary();
-    this.main.crypto.derivePasswordHash(password);
+    this.main.crypto.derivePasswordHash(password, this.finishLogin);
   }
 
   public confirmLogin = (password: string) => {
-    this.main.crypto.derivePasswordHash(password);
-    this.finishConfirmLogin();
+    this.main.crypto.derivePasswordHash(password, this.finishConfirmLogin);
   }
 
   public finishLogin = async () => {
@@ -117,9 +116,7 @@ export default class AccountController extends IController {
 
     const isPwValid = await this.validatePassword();
     if (isPwValid) {
-      this.getPrivateKey();
-      this.routeToSavePrivateKeyPage();
-      return;
+      return (this.routeToSavePrivateKeyPage(), this.getPrivateKey());
     }
 
     chrome.runtime.sendMessage({ type: MESSAGE_TYPE.LOGIN_CONFIRM_FAILURE });
@@ -336,15 +333,12 @@ export default class AccountController extends IController {
     );
   }
 
-  getPrivateKey() {
+  public getPrivateKey() {
     if (!this.loggedInAccount || !this.loggedInAccount.privateKeyHash) return;
     const keyHash = this.recoverFromPrivateKeyHash(this.loggedInAccount.privateKeyHash);
-    chrome.runtime.sendMessage({
-      type: MESSAGE_TYPE.GET_PRIVATE_KEY,
-      walletName: this.loggedInAccount.name,
-      privateKey: keyHash.toWIF()
-    });
-
+    const wif = keyHash.toWIF();
+    const accountName = this.loggedInAccount.name;
+    chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_PRIVATE_KEY, walletName: accountName, privateKey: wif});
   }
 
   /*
