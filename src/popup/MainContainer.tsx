@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import CreateWallet from './pages/CreateWallet';
 import SaveMnemonic from './pages/SaveMnemonic';
 import ImportWallet from './pages/ImportWallet';
+import ExportWallet from './pages/ExportWallet';
 import AccountLogin from './pages/AccountLogin';
 import Settings from './pages/Settings';
 import Home from './pages/Home';
@@ -48,6 +49,7 @@ export default class MainContainer extends Component<IProps, {}> {
             <Route exact path="/create-wallet" component={CreateWallet} />
             <Route exact path="/save-mnemonic" component={SaveMnemonic} />
             <Route exact path="/import-wallet" component={ImportWallet} />
+            <Route exact path="/export-wallet" component={ExportWallet} />
             <Route exact path="/account-login" component={AccountLogin} />
             <Route exact path="/settings" component={Settings} />
             <Route exact path="/home" component={Home} />

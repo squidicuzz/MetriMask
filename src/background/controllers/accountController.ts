@@ -85,7 +85,11 @@ export default class AccountController extends IController {
   */
   public login = async (password: string) => {
     this.main.crypto.generateAppSaltIfNecessary();
-    this.main.crypto.derivePasswordHash(password);
+    this.main.crypto.derivePasswordHash(password, this.finishLogin);
+  }
+
+  public confirmLogin = (password: string) => {
+    this.main.crypto.derivePasswordHash(password, this.finishConfirmLogin);
   }
 
   public finishLogin = async () => {
@@ -102,6 +106,20 @@ export default class AccountController extends IController {
     }
 
     chrome.runtime.sendMessage({ type: MESSAGE_TYPE.LOGIN_FAILURE });
+  }
+
+  public finishConfirmLogin = async () => {
+    if (!this.hasAccounts) {
+      this.routeToAccountPage();
+      return;
+    }
+
+    const isPwValid = await this.validatePassword();
+    if (isPwValid) {
+      return (this.routeToSavePrivateKeyPage(), this.getPrivateKey());
+    }
+
+    chrome.runtime.sendMessage({ type: MESSAGE_TYPE.LOGIN_CONFIRM_FAILURE });
   }
 
   /*
@@ -251,6 +269,10 @@ export default class AccountController extends IController {
     }
   }
 
+  public routeToSavePrivateKeyPage = () => {
+    chrome.runtime.sendMessage({ type: MESSAGE_TYPE.LOGIN_CONFIRM_SUCCESS });
+  }
+
   /*
   * Actions after adding a new account or logging into an existing account.
   */
@@ -309,6 +331,14 @@ export default class AccountController extends IController {
       this.main.crypto.validPasswordHash,
       AccountController.SCRYPT_PARAMS_PRIV_KEY,
     );
+  }
+
+  public getPrivateKey() {
+    if (!this.loggedInAccount || !this.loggedInAccount.privateKeyHash) return;
+    const keyHash = this.recoverFromPrivateKeyHash(this.loggedInAccount.privateKeyHash);
+    const wif = keyHash.toWIF();
+    const accountName = this.loggedInAccount.name;
+    chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_PRIVATE_KEY, walletName: accountName, privateKey: wif});
   }
 
   /*
@@ -446,6 +476,9 @@ export default class AccountController extends IController {
         case MESSAGE_TYPE.LOGIN:
           this.login(request.password);
           break;
+        case MESSAGE_TYPE.CONFIRM_PASSWORD:
+          this.confirmLogin(request.password);
+          break;
         case MESSAGE_TYPE.IMPORT_MNEMONIC:
           await this.importMnemonic(request.accountName, request.mnemonicPrivateKey);
           break;
@@ -454,6 +487,9 @@ export default class AccountController extends IController {
           break;
         case MESSAGE_TYPE.SAVE_TO_FILE:
           this.saveToFile(request.accountName, request.mnemonicPrivateKey);
+          break;
+        case MESSAGE_TYPE.SAVE_PRIVATE_KEY_TO_FILE:
+          this.saveToFile(request.accountName, request.key);
           break;
         case MESSAGE_TYPE.ACCOUNT_LOGIN:
           await this.loginAccount(request.selectedWalletName);

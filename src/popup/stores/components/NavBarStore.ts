@@ -40,6 +40,12 @@ export default class NavBarStore {
   }
 
   @action
+  public routeToExportAccount = () => {
+    this.reset();
+    this.app.routerStore.push('/export-wallet');
+  }
+
+  @action
   public logout = () => {
     this.reset();
     this.app.routerStore.push('/loading');
