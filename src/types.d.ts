@@ -43,6 +43,11 @@ export interface ISignExternalTxRequest {
   request: IRPCCallRequest;
 }
 
+export interface ISignMessageRequest {
+  url: string;
+  request: IRPCCallRequest;
+}
+
 export interface ISigner {
   send(to: string, amount: number, options: ISendTxOptions): Promise<Insight.ISendRawTxResult>;
   sendTransaction(args: any[]): any;

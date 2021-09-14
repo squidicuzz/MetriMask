@@ -1,7 +1,7 @@
 import { IExtensionAPIMessage, IRPCCallRequest } from '../types';
 import { TARGET_NAME, API_TYPE } from '../constants';
 import { MetriMaskRPCProvider } from './MetriMaskRPCProvider';
-import { showSignTxWindow } from './window';
+import { showSignTxWindow, showSignMessageWindow } from './window';
 import { isMessageNotValid } from '../utils';
 import { IInpageAccountWrapper } from '../types';
 
@@ -12,6 +12,7 @@ let metrimask: any = {
   account: null,
 };
 let signTxUrl: string;
+let signMessageUrl: string;
 
 // Add message listeners
 window.addEventListener('message', handleInpageMessage, false);
@@ -35,6 +36,14 @@ const handleSendToContractRequest = (request: IRPCCallRequest) => {
   showSignTxWindow({ url: signTxUrl, request });
 };
 
+/**
+ * Handles the SignMessage request originating from the MetriMaskRPCProvider and opens the sign message window.
+ * @param request SendToContract request.
+ */
+ const handleSignMessageRequest = (request: IRPCCallRequest) => {
+  showSignMessageWindow({ url: signMessageUrl, request });
+};
+
 function handleInpageMessage(event: MessageEvent) {
   if (isMessageNotValid(event, TARGET_NAME.INPAGE)) {
     return;
@@ -44,6 +53,12 @@ function handleInpageMessage(event: MessageEvent) {
   switch (message.type) {
     case API_TYPE.SIGN_TX_URL_RESOLVED:
       signTxUrl = message.payload.url;
+      break;
+    case API_TYPE.SIGN_MESSAGE_URL_RESOLVED:
+      signMessageUrl = message.payload.url;
+      break;
+    case API_TYPE.RPC_SIGN_MESSAGE:
+      handleSignMessageRequest(message.payload);
       break;
     case API_TYPE.RPC_SEND_TO_CONTRACT:
       handleSendToContractRequest(message.payload);

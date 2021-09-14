@@ -40,6 +40,13 @@ export async function injectAllScripts() {
       type: API_TYPE.SIGN_TX_URL_RESOLVED,
       payload: { url: signTxUrl },
     });
+
+    // Pass the Chrome extension absolute URL of the Sign Message dialog to the Inpage
+    const signMessageUrl = chrome.extension.getURL('sign-message.html');
+    postWindowMessage(TARGET_NAME.INPAGE, {
+      type: API_TYPE.SIGN_MESSAGE_URL_RESOLVED,
+      payload: { url: signMessageUrl },
+    });
   });
 
   injectStylesheet(chrome.extension.getURL('css/modal.css'));

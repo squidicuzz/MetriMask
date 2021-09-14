@@ -1,4 +1,5 @@
-import { WalletRPCProvider, Insight } from 'metrixjs-wallet';
+import { WalletRPCProvider, Insight, Wallet } from 'metrixjs-wallet';
+import metrixMessage from 'bitcoinjs-message';
 
 import MetriMaskController from '.';
 import IController from './iController';
@@ -126,6 +127,32 @@ export default class RPCController extends IController {
     this.sendRpcResponseToActiveTab(id, result, error);
   }
 
+
+    /*
+  * Handles a sendToContract requested externally and sends the response back to the active tab.
+  * @param id Request ID.
+  * @param args Request arguments. [contractAddress, data, amount?, gasLimit?, gasPrice?]
+  */
+    private externalSignMessage = async (id: string, args: any[]) => {
+      if (!this.rpcProvider()) {
+        throw Error('Cannot call RPC without provider.');
+      }
+
+      console.log(args);
+      const message = args[2];
+
+      const walletKP = this.rpcProvider()?.wallet as Wallet;
+      const signedMessage = metrixMessage.sign(message, walletKP.keyPair.privateKey);
+
+      console.log(signedMessage);
+      console.log(signedMessage.toString());
+
+      // const { result, error } = await this.sendToContract(id, args);
+      const result = signedMessage.toString();
+      const error = '';
+      this.sendRpcResponseToActiveTab(id, result, error);
+    }
+
   /*
   * Handles a sendToContract requested externally and sends the response back to the active tab.
   * @param id Request ID.
@@ -135,6 +162,8 @@ export default class RPCController extends IController {
     if (!this.rpcProvider()) {
       throw Error('Cannot call RPC without provider.');
     }
+
+
 
     const { result, error } = await this.sendToContract(id, args);
     this.sendRpcResponseToActiveTab(id, result, error);
@@ -162,6 +191,9 @@ export default class RPCController extends IController {
           break;
         case MESSAGE_TYPE.EXTERNAL_SEND_TO_CONTRACT:
           this.externalSendToContract(request.id, request.args);
+          break;
+        case MESSAGE_TYPE.EXTERNAL_SIGN_MESSAGE:
+          this.externalSignMessage(request.id, request.args);
           break;
         case MESSAGE_TYPE.EXTERNAL_CALL_CONTRACT:
           this.externalCallContract(request.id, request.args);
