@@ -1,5 +1,5 @@
 ## Get MetriMask
-Chome Web Store: https://chrome.google.com/webstore/detail/metrimask/hdmjdgjbehedbnjmljikggbmmbnbmlnd
+Chome Web Store: https://chrome.google.com/webstore/detail/pgjlaaokfffcapdcakncnhpmigjlnpei
 
 ## Web Dapp Usage
 
