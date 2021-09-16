@@ -86,6 +86,22 @@ window.metrimask.rpcProvider.rawCall(
   [contractAddress, data, metrixAmt, gasLimit, gasPrice],
 );
 
+// signmessage
+const url = window.location.origin;
+const message = "This is a signed message!"; // The message to sign with currently logged in account.
+window.metrimask.rpcProvider.signMessage([url, message]).then((result) => {
+  console.log(result);
+}
+
+// verifymessage
+const message = "This is a signed message!"; // Message to verify
+const address = window.metrimask.account.address; // Address to verify against, this gets the currently logged in one.
+const signedMessage = "ThisIsTheSignedMessageString"; // A signed message
+const usePrefix = false; // boolean - Was the prefix '\x15Metrix Signed Message:\n' use to sign the original message.
+window.metrimask.rpcProvider.verifyMessage([message, address, signedMessage, usePrefix]).then((response) => {
+    console.log(response); // true or false
+}
+
 // Handle incoming messages
 function handleMessage(message) {
   if (message.data.target == 'metrimask-inpage') {
