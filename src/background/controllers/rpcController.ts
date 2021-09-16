@@ -1,5 +1,7 @@
+const bitcoin = require('bitcoinjs-lib');
 import { WalletRPCProvider, Insight, Wallet } from 'metrixjs-wallet';
 import metrixMessage from 'bitcoinjs-message';
+import assert from 'assert';
 
 import MetriMaskController from '.';
 import IController from './iController';
@@ -8,6 +10,7 @@ import { IRPCCallResponse } from '../../types';
 import Config from '../../config';
 
 export default class RPCController extends IController {
+  private static SCRYPT_PARAMS_PRIV_KEY: any = { N: 8192, r: 8, p: 1 };
   constructor(main: MetriMaskController) {
     super('rpc', main);
 
@@ -138,21 +141,63 @@ export default class RPCController extends IController {
         throw Error('Cannot call RPC without provider.');
       }
 
-      console.log(args);
-      const message = args[2];
+      if (!this.main.account.loggedInAccount || !this.main.account.loggedInAccount.privateKeyHash) return;
 
-      const walletKP = this.rpcProvider()?.wallet as Wallet;
-      const signedMessage = metrixMessage.sign(message, walletKP.keyPair.privateKey);
+      let result = '';
+      let error: any;
+      try {
+        const keyHash = this.recoverFromPrivateKeyHash(this.main.account.loggedInAccount.privateKeyHash);
+        const keyPair = bitcoin.ECPair.fromWIF(keyHash.toWIF(), this.main.network.network.info);
 
-      console.log(signedMessage);
-      console.log(signedMessage.toString());
+        const message = args[1];
+        const signedMessage = metrixMessage.sign(message, keyPair.privateKey, keyPair.compressed);
 
-      // const { result, error } = await this.sendToContract(id, args);
-      const result = signedMessage.toString();
-      const error = '';
+        if (signedMessage) {
+          result = signedMessage.toString('base64');
+        }
+      } catch(err) {
+        error = err;
+      }
       this.sendRpcResponseToActiveTab(id, result, error);
+  }
+
+  private externalVerifyMessage = async (id: string, args: any[]) => {
+    if (!this.rpcProvider()) {
+      throw Error('Cannot call RPC without provider.');
+    }
+    if (args.length < 4) {
+      throw Error ('Not enough arguments supplied to verify message.');
     }
 
+    let result: boolean = false;
+    let error: any;
+
+    const message = args[0];
+    const address = args[1];
+    const signature = args[2];
+    const prefix = args[3];
+
+    if (!this.main.account.loggedInAccount || !this.main.account.loggedInAccount.privateKeyHash) return;
+
+    try {
+      result = metrixMessage.verify(message, address, signature, prefix);
+    } catch(err) {
+      error = err;
+    }
+
+    this.sendRpcResponseToActiveTab(id, result, error);
+  }
+
+  private recoverFromPrivateKeyHash(privateKeyHash: string): Wallet {
+    assert(privateKeyHash, 'invalid privateKeyHash');
+
+    const network = this.main.network.network;
+    return network.fromEncryptedPrivateKey(
+      privateKeyHash,
+      this.main.crypto.validPasswordHash,
+      RPCController.SCRYPT_PARAMS_PRIV_KEY,
+    );
+  }
   /*
   * Handles a sendToContract requested externally and sends the response back to the active tab.
   * @param id Request ID.
@@ -194,6 +239,9 @@ export default class RPCController extends IController {
           break;
         case MESSAGE_TYPE.EXTERNAL_SIGN_MESSAGE:
           this.externalSignMessage(request.id, request.args);
+          break;
+        case MESSAGE_TYPE.EXTERNAL_VERIFY_MESSAGE:
+          this.externalVerifyMessage(request.id, request.args);
           break;
         case MESSAGE_TYPE.EXTERNAL_CALL_CONTRACT:
           this.externalCallContract(request.id, request.args);

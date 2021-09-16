@@ -52,6 +52,6 @@ export function showSignMessageWindow(signMessageReq: ISignMessageRequest) {
   }
 
   const reqStr = JSON.stringify(request);
-  const params = `req=${reqStr}&account=${account.name}`;
+  const params = `req=${reqStr}&account=${account.name}&address=${account.address}`;
   showWindow(350, 650, `${url}?${params}`, 'Sign Message');
 }

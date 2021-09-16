@@ -1,4 +1,5 @@
 let fromAccount;
+let fromAddress;
 let request;
 
 const updateFields = () => {
@@ -8,7 +9,7 @@ const updateFields = () => {
   const message = args[1] || '';
 
   document.getElementById('account-field').innerText = fromAccount;
-  //document.getElementById('balance-field').innerText = balance;
+  document.getElementById('address-field').innerText = fromAddress;
   document.getElementById('url-field').innerText = url;
   document.getElementById('message-field').innerText = message;
 };
@@ -24,9 +25,8 @@ const extractReqParams = () => {
     const key = keyValue[0];
     if (key === 'req') {
       request = JSON.parse(decodeURIComponent(keyValue[1]));
-      delete request.account; // Remove the account obj from the raw request
-    } else if (key === 'from') {
-      fromAccount = keyValue[1];
+      fromAccount = request.account.name;
+      fromAddress = request.account.address;
     }
   });
 

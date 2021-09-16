@@ -1,3 +1,4 @@
+import { IRPCSignMessageRequest, IRPCVerifyMessageRequest } from './../types.d';
 
 import { injectAllScripts } from './inject';
 import { IExtensionAPIMessage, IRPCCallRequest, IRPCCallResponse, ICurrentAccount } from '../types';
@@ -105,6 +106,56 @@ function handleRPCRequest(message: IRPCCallRequest) {
   });
 }
 
+function handleRPCSignMessageRequest(message: IRPCSignMessageRequest) {
+  const { id } = message;
+
+  // Check for logged in account first
+  chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_LOGGED_IN_ACCOUNT }, (account: ICurrentAccount) => {
+    if (!account) {
+      // Not logged in, send error response to Inpage
+      postWindowMessage<IRPCCallResponse>(TARGET_NAME.INPAGE, {
+        type: API_TYPE.RPC_RESPONSE,
+        payload: {
+          id,
+          error: 'Not logged in. Please log in to MetriMask first.',
+        },
+      });
+      return;
+    }
+
+    // Inpage shows sign tx popup
+    postWindowMessage<IRPCSignMessageRequest>(TARGET_NAME.INPAGE, {
+      type: API_TYPE.RPC_SIGN_MESSAGE,
+      payload: {
+        ...message,
+        account,
+      },
+    });
+  });
+}
+
+function handleRPCVerifyMessageRequest(message: IRPCVerifyMessageRequest) {
+  const { id, args} = message;
+
+  // Check for logged in account first
+  chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_LOGGED_IN_ACCOUNT }, (account: ICurrentAccount) => {
+    if (!account) {
+      // Not logged in, send error response to Inpage
+      postWindowMessage<IRPCCallResponse>(TARGET_NAME.INPAGE, {
+        type: API_TYPE.RPC_RESPONSE,
+        payload: {
+          id,
+          error: 'Not logged in. Please log in to MetriMask first.',
+        },
+      });
+      return;
+    }
+
+    // Background execte message verification
+    chrome.runtime.sendMessage({ type: MESSAGE_TYPE.EXTERNAL_VERIFY_MESSAGE, id, args });
+  });
+}
+
 // Forwards the request to the bg script
 function forwardInpageAccountRequest() {
   port.postMessage({ type: MESSAGE_TYPE.GET_INPAGE_METRIMASK_ACCOUNT_VALUES });
@@ -120,6 +171,12 @@ function handleInPageMessage(event: MessageEvent) {
   switch (message.type) {
     case API_TYPE.RPC_REQUEST:
       handleRPCRequest(message.payload);
+      break;
+    case API_TYPE.RPC_SIGN_MESSAGE:
+      handleRPCSignMessageRequest(message.payload);
+      break;
+    case API_TYPE.RPC_VERIFY_MESSAGE:
+      handleRPCVerifyMessageRequest(message.payload);
       break;
     case API_TYPE.GET_INPAGE_METRIMASK_ACCOUNT_VALUES:
       forwardInpageAccountRequest();
