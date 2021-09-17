@@ -33,12 +33,29 @@ export interface IRPCCallResponse {
   error?: string;
 }
 
+export interface IRPCSignMessageRequest {
+  id: string;
+  args: any[];
+  account?: ICurrentAccount;
+}
+
+export interface IRPCVerifyMessageRequest {
+  id: string;
+  args: any[];
+  account?: ICurrentAccount;
+}
+
 export interface ICurrentAccount {
   name: string;
   address: string;
 }
 
 export interface ISignExternalTxRequest {
+  url: string;
+  request: IRPCCallRequest;
+}
+
+export interface ISignMessageRequest {
   url: string;
   request: IRPCCallRequest;
 }

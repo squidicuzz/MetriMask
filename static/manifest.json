@@ -63,6 +63,7 @@
     "commons.popup-inpage.js",
     "inpage.js",
     "sign-tx.html",
+    "sign-message.html",
     "images/logo.png",
     "css/modal.css"
   ],

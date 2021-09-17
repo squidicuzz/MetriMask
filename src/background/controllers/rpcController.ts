@@ -1,4 +1,7 @@
-import { WalletRPCProvider, Insight } from 'metrixjs-wallet';
+const bitcoin = require('bitcoinjs-lib');
+import { WalletRPCProvider, Insight, Wallet } from 'metrixjs-wallet';
+import metrixMessage from 'bitcoinjs-message';
+import assert from 'assert';
 
 import MetriMaskController from '.';
 import IController from './iController';
@@ -7,6 +10,7 @@ import { IRPCCallResponse } from '../../types';
 import Config from '../../config';
 
 export default class RPCController extends IController {
+  private static SCRYPT_PARAMS_PRIV_KEY: any = { N: 8192, r: 8, p: 1 };
   constructor(main: MetriMaskController) {
     super('rpc', main);
 
@@ -126,6 +130,108 @@ export default class RPCController extends IController {
     this.sendRpcResponseToActiveTab(id, result, error);
   }
 
+
+    /*
+  * Handles a messageSigning requested externally and sends the response back to the active tab.
+  * @param id Request ID.
+  * @param args Request arguments. [url, message, usePrefix?, sigOptions?]
+  */
+    private externalSignMessage = async (id: string, args: any[]) => {
+      if (!this.rpcProvider()) {
+        throw Error('Cannot call RPC without provider.');
+      }
+
+      if (!this.main.account.loggedInAccount || !this.main.account.loggedInAccount.privateKeyHash) return;
+
+      if (args.length < 2) {
+        throw Error ('Not enough arguments supplied to sign message.');
+      }
+
+      let result = '';
+      let error: any;
+      let usePrefix;
+      let sigOptions;
+
+      if (args.length === 3 && args[2] === true) {
+        usePrefix = '\x15Metrix Signed Message:\n';
+      }
+      if (args.length === 4 && JSON.stringify(args[3]).indexOf('segwitType' || 'extraEntropy') !== -1) {
+        sigOptions = args[3];
+      }
+
+      try {
+        const keyHash = this.recoverFromPrivateKeyHash(this.main.account.loggedInAccount.privateKeyHash);
+        const keyPair = bitcoin.ECPair.fromWIF(keyHash.toWIF(), this.main.network.network.info);
+
+        const message = args[1];
+        const signedMessage = metrixMessage.sign(
+          message,
+          keyPair.privateKey,
+          keyPair.compressed,
+          usePrefix,
+          sigOptions
+        );
+
+        if (signedMessage) {
+          result = signedMessage.toString('base64');
+        }
+      } catch(err) {
+        error = err;
+      }
+      this.sendRpcResponseToActiveTab(id, result, error);
+  }
+
+
+  /*
+  * Handles a messageVerification requested externally and sends the response back to the active tab.
+  * @param id Request ID.
+  * @param args Request arguments. [message, address, signature, usePrefix?, checkSegwitAlways?]
+  */
+  private externalVerifyMessage = async (id: string, args: any[]) => {
+    if (!this.rpcProvider()) {
+      throw Error('Cannot call RPC without provider.');
+    }
+    if (args.length < 3) {
+      throw Error ('Not enough arguments supplied to verify message.');
+    }
+
+    let result: boolean = false;
+    let error: any;
+
+    const message = args[0];
+    const address = args[1];
+    const signature = args[2];
+    let prefix;
+    let checkSegwitAlways;
+    if (args.length === 4 && args[3] === true) {
+      prefix = '\x15Metrix Signed Message:\n';
+    }
+
+    if (args.length === 5 && typeof args[4] === 'boolean') {
+      checkSegwitAlways = args[4];
+    }
+
+    if (!this.main.account.loggedInAccount || !this.main.account.loggedInAccount.privateKeyHash) return;
+
+    try {
+      result = metrixMessage.verify(message, address, signature, prefix, checkSegwitAlways);
+    } catch(err) {
+      error = err;
+    }
+
+    this.sendRpcResponseToActiveTab(id, result, error);
+  }
+
+  private recoverFromPrivateKeyHash(privateKeyHash: string): Wallet {
+    assert(privateKeyHash, 'invalid privateKeyHash');
+
+    const network = this.main.network.network;
+    return network.fromEncryptedPrivateKey(
+      privateKeyHash,
+      this.main.crypto.validPasswordHash,
+      RPCController.SCRYPT_PARAMS_PRIV_KEY,
+    );
+  }
   /*
   * Handles a sendToContract requested externally and sends the response back to the active tab.
   * @param id Request ID.
@@ -135,6 +241,8 @@ export default class RPCController extends IController {
     if (!this.rpcProvider()) {
       throw Error('Cannot call RPC without provider.');
     }
+
+
 
     const { result, error } = await this.sendToContract(id, args);
     this.sendRpcResponseToActiveTab(id, result, error);
@@ -162,6 +270,12 @@ export default class RPCController extends IController {
           break;
         case MESSAGE_TYPE.EXTERNAL_SEND_TO_CONTRACT:
           this.externalSendToContract(request.id, request.args);
+          break;
+        case MESSAGE_TYPE.EXTERNAL_SIGN_MESSAGE:
+          this.externalSignMessage(request.id, request.args);
+          break;
+        case MESSAGE_TYPE.EXTERNAL_VERIFY_MESSAGE:
+          this.externalVerifyMessage(request.id, request.args);
           break;
         case MESSAGE_TYPE.EXTERNAL_CALL_CONTRACT:
           this.externalCallContract(request.id, request.args);

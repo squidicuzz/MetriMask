@@ -1,4 +1,4 @@
-import { IRPCCallPendingRequest, IRPCCallRequest, IRPCCallResponse } from '../types';
+import { IRPCCallPendingRequest, IRPCCallRequest, IRPCCallResponse, IRPCSignMessageRequest, IRPCVerifyMessageRequest } from '../types';
 import { TARGET_NAME, API_TYPE } from '../constants';
 import { generateRequestId } from '../utils';
 import { postWindowMessage } from '../utils/messenger';
@@ -12,6 +12,26 @@ export class MetriMaskRPCProvider {
       postWindowMessage<IRPCCallRequest>(TARGET_NAME.CONTENTSCRIPT, {
         type: API_TYPE.RPC_REQUEST,
         payload: { id, method, args },
+      });
+    });
+  }
+
+  public signMessage = (args: any []) => {
+    return new Promise((resolve, reject) => {
+      const id = this.trackRequest(resolve, reject);
+      postWindowMessage<IRPCSignMessageRequest>(TARGET_NAME.CONTENTSCRIPT, {
+        type: API_TYPE.RPC_SIGN_MESSAGE,
+        payload: { id, args },
+      });
+    });
+  }
+
+  public verifyMessage = (args: any []) => {
+    return new Promise((resolve, reject) => {
+      const id = this.trackRequest(resolve, reject);
+      postWindowMessage<IRPCVerifyMessageRequest>(TARGET_NAME.CONTENTSCRIPT, {
+        type: API_TYPE.RPC_VERIFY_MESSAGE,
+        payload: { id, args },
       });
     });
   }

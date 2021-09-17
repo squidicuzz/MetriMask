@@ -1,4 +1,4 @@
-import { ISignExternalTxRequest } from '../types';
+import { ISignExternalTxRequest, ISignMessageRequest } from '../types';
 
 function showWindow(width: number, height: number, url: string = '', name: string = 'metrimask-window'): Window {
   const top = (screen.availHeight / 2) - (height / 2);
@@ -35,4 +35,23 @@ export function showSignTxWindow(signTxReq: ISignExternalTxRequest) {
   const reqStr = JSON.stringify(request);
   const params = `req=${reqStr}&from=${account.address}`;
   showWindow(350, 650, `${url}?${params}`, 'Confirm Transaction');
+}
+
+export function showSignMessageWindow(signMessageReq: ISignMessageRequest) {
+  const { url, request } = signMessageReq;
+  if (!url) {
+    throw Error('Cannot resolve Sign Message Dialog URL.');
+  }
+  if (!request) {
+    throw Error('No message signing request found.');
+  }
+
+  const { account } = request;
+  if (!account) {
+    throw Error('No account found.');
+  }
+
+  const reqStr = JSON.stringify(request);
+  const params = `req=${reqStr}&account=${account.name}&address=${account.address}`;
+  showWindow(350, 650, `${url}?${params}`, 'Sign Message');
 }
