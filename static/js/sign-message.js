@@ -4,7 +4,6 @@ let request;
 
 const updateFields = () => {
   const { args } = request;
-  //const account = args[0] || '';
   const url = args[0] || '';
   const message = args[1] || '';
 

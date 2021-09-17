@@ -89,7 +89,8 @@ window.metrimask.rpcProvider.rawCall(
 // signmessage
 const url = window.location.origin;
 const message = "This is a signed message!"; // The message to sign with currently logged in account.
-window.metrimask.rpcProvider.signMessage([url, message]).then((result) => {
+const usePrefix = false; // (Optional) boolean - Use prefix '\x15Metrix Signed Message:\n' to sign the message.
+window.metrimask.rpcProvider.signMessage([url, message, usePrefix]).then((result) => {
   console.log(result);
 }
 
@@ -97,7 +98,7 @@ window.metrimask.rpcProvider.signMessage([url, message]).then((result) => {
 const message = "This is a signed message!"; // Message to verify
 const address = window.metrimask.account.address; // Address to verify against, this gets the currently logged in one.
 const signedMessage = "ThisIsTheSignedMessageString"; // A signed message
-const usePrefix = false; // boolean - Was the prefix '\x15Metrix Signed Message:\n' use to sign the original message.
+const usePrefix = false; // (Optional) boolean - Was the prefix '\x15Metrix Signed Message:\n' use to sign the original message.
 window.metrimask.rpcProvider.verifyMessage([message, address, signedMessage, usePrefix]).then((response) => {
     console.log(response); // true or false
 }

@@ -132,9 +132,9 @@ export default class RPCController extends IController {
 
 
     /*
-  * Handles a sendToContract requested externally and sends the response back to the active tab.
+  * Handles a messageSigning requested externally and sends the response back to the active tab.
   * @param id Request ID.
-  * @param args Request arguments. [contractAddress, data, amount?, gasLimit?, gasPrice?]
+  * @param args Request arguments. [url, message, usePrefix?, sigOptions?]
   */
     private externalSignMessage = async (id: string, args: any[]) => {
       if (!this.rpcProvider()) {
@@ -143,14 +143,34 @@ export default class RPCController extends IController {
 
       if (!this.main.account.loggedInAccount || !this.main.account.loggedInAccount.privateKeyHash) return;
 
+      if (args.length < 2) {
+        throw Error ('Not enough arguments supplied to sign message.');
+      }
+
       let result = '';
       let error: any;
+      let usePrefix;
+      let sigOptions;
+
+      if (args.length === 3 && args[2] === true) {
+        usePrefix = '\x15Metrix Signed Message:\n';
+      }
+      if (args.length === 4 && JSON.stringify(args[3]).indexOf('segwitType' || 'extraEntropy') !== -1) {
+        sigOptions = args[3];
+      }
+
       try {
         const keyHash = this.recoverFromPrivateKeyHash(this.main.account.loggedInAccount.privateKeyHash);
         const keyPair = bitcoin.ECPair.fromWIF(keyHash.toWIF(), this.main.network.network.info);
 
         const message = args[1];
-        const signedMessage = metrixMessage.sign(message, keyPair.privateKey, keyPair.compressed);
+        const signedMessage = metrixMessage.sign(
+          message,
+          keyPair.privateKey,
+          keyPair.compressed,
+          usePrefix,
+          sigOptions
+        );
 
         if (signedMessage) {
           result = signedMessage.toString('base64');
@@ -161,11 +181,17 @@ export default class RPCController extends IController {
       this.sendRpcResponseToActiveTab(id, result, error);
   }
 
+
+  /*
+  * Handles a messageVerification requested externally and sends the response back to the active tab.
+  * @param id Request ID.
+  * @param args Request arguments. [message, address, signature, usePrefix?, checkSegwitAlways?]
+  */
   private externalVerifyMessage = async (id: string, args: any[]) => {
     if (!this.rpcProvider()) {
       throw Error('Cannot call RPC without provider.');
     }
-    if (args.length < 4) {
+    if (args.length < 3) {
       throw Error ('Not enough arguments supplied to verify message.');
     }
 
@@ -175,12 +201,20 @@ export default class RPCController extends IController {
     const message = args[0];
     const address = args[1];
     const signature = args[2];
-    const prefix = args[3];
+    let prefix;
+    let checkSegwitAlways;
+    if (args.length === 4 && args[3] === true) {
+      prefix = '\x15Metrix Signed Message:\n';
+    }
+
+    if (args.length === 5 && typeof args[4] === 'boolean') {
+      checkSegwitAlways = args[4];
+    }
 
     if (!this.main.account.loggedInAccount || !this.main.account.loggedInAccount.privateKeyHash) return;
 
     try {
-      result = metrixMessage.verify(message, address, signature, prefix);
+      result = metrixMessage.verify(message, address, signature, prefix, checkSegwitAlways);
     } catch(err) {
       error = err;
     }
