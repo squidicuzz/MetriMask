@@ -714,14 +714,9 @@ big.js@^6.1.1:
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-6.1.1.tgz#63b35b19dc9775c94991ee5db7694880655d5537"
   integrity sha512-1vObw81a8ylZO5ePrtMay0n018TcftpTA5HFKDaSuiUDBo8biRBtjIobw60OpwuvrGk+FsxKamqN4cnmj/eXdg==
 
-bigi@^1.1.0, bigi@^1.2.0, bigi@^1.4.0, bigi@^1.4.2:
+bigi@^1.1.0, bigi@^1.2.0, bigi@^1.4.0:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/bigi/-/bigi-1.4.2.tgz#9c665a95f88b8b08fc05cfd731f561859d725825"
-
-bignumber.js@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-4.1.0.tgz#db6f14067c140bd46624815a7916c92d9b6c24b1"
-  integrity sha512-eJzYkFYy9L4JzXsbymsFn3p54D+llV27oTQ+ziJG7WFRheJcNZilgVXMG0LoZtlQSKBsJdWtLFqOD0u+U0jZKA==
 
 bignumber.js@^7.2.1:
   version "7.2.1"
@@ -818,7 +813,7 @@ bitcoinjs-lib@4.0.5:
     varuint-bitcoin "^1.0.4"
     wif "^2.0.1"
 
-bitcoinjs-lib@^3.3.1, bitcoinjs-lib@^3.3.2:
+bitcoinjs-lib@^3.3.1:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/bitcoinjs-lib/-/bitcoinjs-lib-3.3.2.tgz#780c9c53ecb1222adb463b58bef26386067b609a"
   integrity sha512-l5qqvbaK8wwtANPf6oEffykycg4383XgEYdia1rI7/JpGf1jfRWlOUCvx5TiTZS7kyIvY4j/UhIQ2urLsvGkzw==
@@ -3692,16 +3687,6 @@ merkle-lib@^2.0.10:
   resolved "https://registry.yarnpkg.com/merkle-lib/-/merkle-lib-2.0.10.tgz#82b8dbae75e27a7785388b73f9d7725d0f6f3326"
   integrity sha1-grjbrnXieneFOItz+ddyXQ9vMyY=
 
-metrixjs-lib@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/metrixjs-lib/-/metrixjs-lib-1.0.0.tgz#711d20f23f3769bc591d280e7246110e93330540"
-  integrity sha512-8IMlzSUf7HgYsDJ3/8mVqFTj/M9IYvy23LMO+vNn65nyVcqV3e8LIX4PvxLxckIadj5SwRcZ6/lAw9uaWPUB4w==
-  dependencies:
-    bignumber.js "^4.1.0"
-    bitcoinjs-lib "^3.3.2"
-    qtum-opcodes "^1.0.0"
-    safe-buffer "^5.1.1"
-
 metrixjs-wallet@^0.2.17:
   version "0.2.17"
   resolved "https://registry.yarnpkg.com/metrixjs-wallet/-/metrixjs-wallet-0.2.17.tgz#5942e3e098e2cc4f3d4a020b242cec80c9874c8f"
@@ -4963,11 +4948,6 @@ qs@~6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
   integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
-
-qtum-opcodes@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/qtum-opcodes/-/qtum-opcodes-1.0.0.tgz#2353d3647f0ec6283763338d52464c072f83f53f"
-  integrity sha512-m3FreWxFK53dz2RpvFfJlb4HaCog0QSNVCbyVwhX/0xkZpjxTjJXpFKaWQV/Im0q5y2UlvhAlpITsihihyJSug==
 
 query-string@^4.1.0:
   version "4.3.4"
