@@ -3687,10 +3687,10 @@ merkle-lib@^2.0.10:
   resolved "https://registry.yarnpkg.com/merkle-lib/-/merkle-lib-2.0.10.tgz#82b8dbae75e27a7785388b73f9d7725d0f6f3326"
   integrity sha1-grjbrnXieneFOItz+ddyXQ9vMyY=
 
-metrixjs-wallet@^0.2.17:
-  version "0.2.17"
-  resolved "https://registry.yarnpkg.com/metrixjs-wallet/-/metrixjs-wallet-0.2.17.tgz#5942e3e098e2cc4f3d4a020b242cec80c9874c8f"
-  integrity sha512-sNvOJ9876OeIcHm33h/e/5vQ7znKJBSI9+2E2yfeLIup9P+ZHqG4J7hZjK4ySDMkM6g5vtxvBcaowlKgCUwFtQ==
+metrixjs-wallet@^0.2.19:
+  version "0.2.19"
+  resolved "https://registry.yarnpkg.com/metrixjs-wallet/-/metrixjs-wallet-0.2.19.tgz#5b4f4f819b5c7c50c751a688c4fa4863abd79362"
+  integrity sha512-2hLJHlKqduhfZYHB/WaAxiSvrCgc6hLTPFUAsF9Aea8AlHuYy+NFLG+4xGcoyLBBlFUGDmqhjddkU6yOlVr8qg==
   dependencies:
     "@types/bip38" "^2.0.1"
     "@types/secp256k1" "^4.0.2"
