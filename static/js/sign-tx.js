@@ -12,7 +12,7 @@ const updateFields = () => {
   document.getElementById('from-field').innerText = fromAddress;
   document.getElementById('to-field').innerText = to;
   document.getElementById('amount-field').innerText = amount;
-  document.getElementById('gas-limit-field').innerText = gasLimit;
+  document.getElementById('gas-limit-field').value = gasLimit;
   document.getElementById('gas-price-field').value = gasPrice;
   document.getElementById('max-tx-fee-field').innerText = maxTxFee;
   document.getElementById('raw-tx-field').innerText = JSON.stringify(request);
@@ -67,6 +67,10 @@ window.onload = () => {
   document.getElementById('button-cancel').addEventListener('click', cancelTransaction);
   document.getElementById('gas-price-field').addEventListener('change', (res) => {
     request.args[4] = res.target.value ? parseInt(res.target.value) : 5000
+    updateFields();
+  });
+  document.getElementById('gas-limit-field').addEventListener('change', (res) => {
+    request.args[3] = res.target.value ? parseInt(res.target.value) : 250000
     updateFields();
   });
 }
