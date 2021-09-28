@@ -6,13 +6,25 @@
 
 body {
   font-family: 'Montserrat', sans-serif;
-  padding: 16px;
+  padding: 5px;
   overflow-y: scroll;
+}
+
+.maincontainer {
+  padding: 16px;
 }
 
 .row {
   display: flex;
   flex-direction: row;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.center-content {
+  justify-content: center;
 }
 
 .center {
@@ -41,10 +53,22 @@ body {
 }
 
 .heading {
-  font-size: 12px;
+  font-size: 14px;
+  line-height: 24px;
+  padding-right: 1rem;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.8);
   margin: 0;
+}
+
+.header-bg {
+  background: linear-gradient(180deg, #8E6BF1 -9.7%, #4D154D 85.28%);;
+  height: 60px;
+  padding: 0%;
+}
+
+.title {
+  color: #fff;
 }
 
 .address {
@@ -61,11 +85,44 @@ body {
   align-items: center;
 }
 
+.gas-limit-container {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.gas-price-container {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .amount {
   width: 88px;
   font-size: 16px;
   line-height: 20px;
   color: rgba(0, 0, 0, 0.8);
+  text-align: right;
+}
+
+.gas-limit {
+  width: 150px;
+  font-size: 16px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.8);
+  border: 0;
+  text-align: right;
+}
+
+.gas-price {
+  width: 98px;
+  font-size: 16px;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.8);
+  border: 0;
+  text-align: right;
 }
 
 .unit {
