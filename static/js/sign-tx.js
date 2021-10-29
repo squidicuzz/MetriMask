@@ -11,7 +11,7 @@ const updateFields = () => {
 
   document.getElementById('from-field').innerText = fromAddress;
   document.getElementById('to-field').innerText = to;
-  document.getElementById('amount-field').innerText = amount;
+  document.getElementById('amount-field').value = amount;
   document.getElementById('gas-limit-field').value = gasLimit;
   document.getElementById('gas-price-field').value = gasPrice;
   document.getElementById('max-tx-fee-field').innerText = maxTxFee;
@@ -68,6 +68,10 @@ window.onload = () => {
   extractReqParams();
   document.getElementById('button-confirm').addEventListener('click', confirmTransaction);
   document.getElementById('button-cancel').addEventListener('click', cancelTransaction);
+  document.getElementById('amount-field').addEventListener('change', (res) => {
+    request.args[2] = res.target.value ? parseInt(res.target.value) : 0
+    updateFields();
+  });
   document.getElementById('gas-price-field').addEventListener('change', (res) => {
     request.args[4] = res.target.value ? parseInt(res.target.value) : 5000
     updateFields();
