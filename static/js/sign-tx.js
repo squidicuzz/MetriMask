@@ -58,6 +58,9 @@ const confirmTransaction = () => {
 };
 
 const cancelTransaction = () => {
+  chrome.runtime.sendMessage({
+    type: 'METRIMASK_WINDOW_CLOSE' // MESSAGE_TYPE.METRIMASK_WINDOW_CLOSE
+  });
   window.close();
 };
 
