@@ -1,6 +1,10 @@
 import MetriMaskController from '.';
 import IController from './iController';
-import { MESSAGE_TYPE, RESPONSE_TYPE, METRIMASK_ACCOUNT_CHANGE } from '../../constants';
+import {
+  MESSAGE_TYPE,
+  RESPONSE_TYPE,
+  METRIMASK_ACCOUNT_CHANGE
+} from '../../constants';
 
 export default class SessionController extends IController {
   public sessionTimeout?: number = undefined;
@@ -24,20 +28,22 @@ export default class SessionController extends IController {
   }
 
   /*
-  * Clears all the intervals throughout the app.
-  */
+   * Clears all the intervals throughout the app.
+   */
   public clearAllIntervals = () => {
     this.main.account.stopPolling();
     this.clearAllIntervalsExceptAccount();
   }
 
   /*
-  * Closes the current session and resets all the necessary session values.
-  */
+   * Closes the current session and resets all the necessary session values.
+   */
   public clearSession = () => {
     this.main.account.resetAccount();
     this.main.token.resetTokenList();
-    this.main.inpageAccount.sendInpageAccountAllPorts(METRIMASK_ACCOUNT_CHANGE.LOGOUT);
+    this.main.inpageAccount.sendInpageAccountAllPorts(
+      METRIMASK_ACCOUNT_CHANGE.LOGOUT
+    );
   }
 
   private clearAllIntervalsExceptAccount = () => {
@@ -47,28 +53,35 @@ export default class SessionController extends IController {
   }
 
   /*
-  * Actions taken when the popup is opened.
-  */
+   * Actions taken when the popup is opened.
+   */
   private onPopupOpened = () => {
     // If port is reconnected (user reopened the popup), clear sessionTimeout
     clearTimeout(this.sessionTimeout);
   }
 
   /*
-  * Actions taken when the popup is closed..
-  */
+   * Actions taken when the popup is closed..
+   */
   private onPopupClosed = () => {
     this.clearAllIntervalsExceptAccount();
 
-    // Logout from bgp after interval
-    this.sessionTimeout = window.setTimeout(() => {
-      this.clearSession();
-      this.main.crypto.resetPasswordHash();
-      console.log('Session cleared');
-    },  this.sessionLogoutInterval);
+    // Check if session logout is enabled
+    if (this.sessionLogoutInterval > 0) {
+      // Logout from bgp after interval
+      this.sessionTimeout = window.setTimeout(() => {
+        this.clearSession();
+        this.main.crypto.resetPasswordHash();
+        console.log('Session cleared');
+      }, this.sessionLogoutInterval);
+    }
   }
 
-  private handleMessage = (request: any, _: chrome.runtime.MessageSender, sendResponse: (response: any) => void) => {
+  private handleMessage = (
+    request: any,
+    _: chrome.runtime.MessageSender,
+    sendResponse: (response: any) => void
+  ) => {
     try {
       switch (request.type) {
         case MESSAGE_TYPE.RESTORE_SESSION:
