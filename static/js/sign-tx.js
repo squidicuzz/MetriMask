@@ -19,7 +19,7 @@ const updateFields = () => {
 };
 
 function gasConvert(amount) {
-  if(amount % 1 != 0) {
+  if (amount % 1 != 0) {
     request.args[4] = amount * 1e8;
     return amount * 1e8;
   }
@@ -51,7 +51,7 @@ const confirmTransaction = () => {
   chrome.runtime.sendMessage({
     type: 'EXTERNAL_SEND_TO_CONTRACT', // MESSAGE_TYPE.EXTERNAL_SEND_TO_CONTRACT
     id,
-    args,
+    args
   });
 
   window.close();
@@ -61,23 +61,32 @@ const cancelTransaction = () => {
   chrome.runtime.sendMessage({
     type: 'METRIMASK_WINDOW_CLOSE' // MESSAGE_TYPE.METRIMASK_WINDOW_CLOSE
   });
+
   window.close();
 };
 
 window.onload = () => {
   extractReqParams();
-  document.getElementById('button-confirm').addEventListener('click', confirmTransaction);
-  document.getElementById('button-cancel').addEventListener('click', cancelTransaction);
+  document
+    .getElementById('button-confirm')
+    .addEventListener('click', confirmTransaction);
+  document
+    .getElementById('button-cancel')
+    .addEventListener('click', cancelTransaction);
   document.getElementById('amount-field').addEventListener('change', (res) => {
-    request.args[2] = res.target.value ? parseInt(res.target.value) : 0
+    request.args[2] = res.target.value ? parseInt(res.target.value) : 0;
     updateFields();
   });
-  document.getElementById('gas-price-field').addEventListener('change', (res) => {
-    request.args[4] = res.target.value ? parseInt(res.target.value) : 5000
-    updateFields();
-  });
-  document.getElementById('gas-limit-field').addEventListener('change', (res) => {
-    request.args[3] = res.target.value ? parseInt(res.target.value) : 250000
-    updateFields();
-  });
-}
+  document
+    .getElementById('gas-price-field')
+    .addEventListener('change', (res) => {
+      request.args[4] = res.target.value ? parseInt(res.target.value) : 5000;
+      updateFields();
+    });
+  document
+    .getElementById('gas-limit-field')
+    .addEventListener('change', (res) => {
+      request.args[3] = res.target.value ? parseInt(res.target.value) : 250000;
+      updateFields();
+    });
+};
