@@ -37,7 +37,7 @@ const confirmTransaction = () => {
   chrome.runtime.sendMessage({
     type: 'EXTERNAL_SIGN_MESSAGE', // MESSAGE_TYPE.EXTERNAL_SIGN_MESSAGE
     id,
-    args,
+    args
   });
 
   window.close();
@@ -47,11 +47,16 @@ const cancelTransaction = () => {
   chrome.runtime.sendMessage({
     type: 'METRIMASK_WINDOW_CLOSE' // MESSAGE_TYPE.METRIMASK_WINDOW_CLOSE
   });
+
   window.close();
 };
 
 window.onload = () => {
   extractReqParams();
-  document.getElementById('button-confirm').addEventListener('click', confirmTransaction);
-  document.getElementById('button-cancel').addEventListener('click', cancelTransaction);
-}
+  document
+    .getElementById('button-confirm')
+    .addEventListener('click', confirmTransaction);
+  document
+    .getElementById('button-cancel')
+    .addEventListener('click', cancelTransaction);
+};

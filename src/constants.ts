@@ -1,17 +1,17 @@
 export enum TARGET_NAME {
   INPAGE = 'metrimask-inpage',
   CONTENTSCRIPT = 'metrimask-contentscript',
-  BACKGROUND = 'metrimask-background',
+  BACKGROUND = 'metrimask-background'
 }
 
 export enum PORT_NAME {
   POPUP = 'metrimask-popup',
-  CONTENTSCRIPT = 'metrimask-contentscript',
+  CONTENTSCRIPT = 'metrimask-contentscript'
 }
 
 export enum RPC_METHOD {
   SEND_TO_CONTRACT = 'sendtocontract',
-  CALL_CONTRACT = 'callcontract',
+  CALL_CONTRACT = 'callcontract'
 }
 
 export enum API_TYPE {
@@ -25,7 +25,7 @@ export enum API_TYPE {
   GET_INPAGE_METRIMASK_ACCOUNT_VALUES = 'GET_INPAGE_METRIMASK_ACCOUNT_VALUES',
   SEND_INPAGE_METRIMASK_ACCOUNT_VALUES = 'METRIMASK_ACCOUNT_CHANGED',
   CONNECT_INPAGE_METRIMASK = 'CONNECT_METRIMASK',
-  PORT_DISCONNECTED = 'PORT_DISCONNECTED',
+  PORT_DISCONNECTED = 'PORT_DISCONNECTED'
 }
 
 export enum MESSAGE_TYPE {
@@ -90,11 +90,12 @@ export enum MESSAGE_TYPE {
   SEND_INPAGE_METRIMASK_ACCOUNT_VALUES = 'SEND_INPAGE_METRIMASK_ACCOUNT_VALUES',
   GET_PRIVATE_KEY = 'GET_PRIVATE_KEY',
   SAVE_PRIVATE_KEY_TO_FILE = 'SAVE_PRIVATE_KEY_TO_FILE',
-  CONFIRM_PASSWORD = 'CONFIRM_PASSWORD'
+  CONFIRM_PASSWORD = 'CONFIRM_PASSWORD',
+  METRIMASK_WINDOW_CLOSE = 'METRIMASK_WINDOW_CLOSE'
 }
 
 export enum RESPONSE_TYPE {
-  RESTORING_SESSION,
+  RESTORING_SESSION
 }
 
 export enum STORAGE {
@@ -104,24 +105,24 @@ export enum STORAGE {
   MAINNET_ACCOUNTS = 'mainnetAccounts',
   LOGGED_IN_ACCOUNT = 'loggedInAccount',
   NETWORK_INDEX = 'networkIndex',
-  ACCOUNT_TOKEN_LIST = 'accountTokenList',
+  ACCOUNT_TOKEN_LIST = 'accountTokenList'
 }
 
 export enum IMPORT_TYPE {
   MNEMONIC = 'seed phrase',
-  PRIVATE_KEY = 'private key',
+  PRIVATE_KEY = 'private key'
 }
 
 export enum SEND_STATE {
   INITIAL = 'Confirm',
   SENDING = 'Sending...',
-  SENT = 'Sent!',
+  SENT = 'Sent!'
 }
 
 export enum NETWORK_NAMES {
   REGTEST = 'RegTest',
   TESTNET = 'TestNet',
-  MAINNET = 'MainNet',
+  MAINNET = 'MainNet'
 }
 
 export enum INTERVAL_NAMES {
@@ -130,18 +131,18 @@ export enum INTERVAL_NAMES {
   TEN_MIN = '10 min',
   THIRTY_MIN = '30 min',
   TWO_HOUR = '2 hr',
-  TWELVE_HOUR = '12 hr',
+  TWELVE_HOUR = '12 hr'
 }
 
 export enum TRANSACTION_SPEED {
   SLOW = 'Slow',
   NORMAL = 'Normal',
-  FAST = 'Fast',
+  FAST = 'Fast'
 }
 
 export enum METRIMASK_ACCOUNT_CHANGE {
   LOGIN = 'Account Logged In',
   LOGOUT = 'Account Logged Out',
   BALANCE_CHANGE = 'MRX Account Balance Changed',
-  DAPP_CONNECTION = 'Account Connected to Dapp',
+  DAPP_CONNECTION = 'Account Connected to Dapp'
 }
