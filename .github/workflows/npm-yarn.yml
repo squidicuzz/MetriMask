@@ -29,8 +29,8 @@ jobs:
     - name: Build
       run: yarn run build
     - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: dist
-          path: |
-            dist
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist
+        path: |
+          dist
