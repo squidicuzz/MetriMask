@@ -44,6 +44,13 @@ async function setupLongLivedConnection(event: MessageEvent) {
           payload: msg.accountWrapper
         });
       }
+      if (msg.type === MESSAGE_TYPE.METRIMASK_WINDOW_CLOSE) {
+        // content script -> inpage and/or Dapp event listener
+        postWindowMessage(TARGET_NAME.INPAGE, {
+          type: API_TYPE.METRIMASK_WINDOW_CLOSE,
+          payload: msg.accountWrapper
+        });
+      }
     });
 
     /*
@@ -192,6 +199,12 @@ function forwardInpageAccountRequest() {
   port.postMessage({ type: MESSAGE_TYPE.GET_INPAGE_METRIMASK_ACCOUNT_VALUES });
 }
 
+// Forwards the request to the bg script
+function forwardInpageWindowClose() {
+  console.log('forwardInpageWindowClose()');
+  port.postMessage({ type: MESSAGE_TYPE.METRIMASK_WINDOW_CLOSE });
+}
+
 // Handle messages sent from inpage -> content script(here) -> bg script
 function handleInPageMessage(event: MessageEvent) {
   if (isMessageNotValid(event, TARGET_NAME.CONTENTSCRIPT)) {
@@ -212,6 +225,9 @@ function handleInPageMessage(event: MessageEvent) {
     case API_TYPE.GET_INPAGE_METRIMASK_ACCOUNT_VALUES:
       forwardInpageAccountRequest();
       break;
+    case API_TYPE.METRIMASK_WINDOW_CLOSE:
+      forwardInpageWindowClose();
+      break;
     default:
       throw Error(`Contentscript processing invalid type: ${message}`);
   }
@@ -220,7 +236,6 @@ function handleInPageMessage(event: MessageEvent) {
 // Handle messages sent from bg script -> content script(here) -> inpage
 function handleBackgroundScriptMessage(message: any) {
   switch (message.type) {
-    case MESSAGE_TYPE.METRIMASK_WINDOW_CLOSE:
     case MESSAGE_TYPE.EXTERNAL_RPC_CALL_RETURN:
       postWindowMessage<IRPCCallResponse>(TARGET_NAME.INPAGE, {
         type: API_TYPE.RPC_RESPONSE,
