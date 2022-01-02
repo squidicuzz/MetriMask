@@ -1,8 +1,19 @@
 import { IRPCSignMessageRequest, IRPCVerifyMessageRequest } from './../types.d';
 
 import { injectAllScripts } from './inject';
-import { IExtensionAPIMessage, IRPCCallRequest, IRPCCallResponse, ICurrentAccount } from '../types';
-import { TARGET_NAME, API_TYPE, MESSAGE_TYPE, RPC_METHOD, PORT_NAME } from '../constants';
+import {
+  IExtensionAPIMessage,
+  IRPCCallRequest,
+  IRPCCallResponse,
+  ICurrentAccount
+} from '../types';
+import {
+  TARGET_NAME,
+  API_TYPE,
+  MESSAGE_TYPE,
+  RPC_METHOD,
+  PORT_NAME
+} from '../constants';
 import { isMessageNotValid } from '../utils';
 import { postWindowMessage } from '../utils/messenger';
 
@@ -16,7 +27,10 @@ window.addEventListener('message', setupLongLivedConnection, false);
 
 // Create a long-lived connection to the background page and inject content scripts
 async function setupLongLivedConnection(event: MessageEvent) {
-  if (event.data.message && event.data.message.type === API_TYPE.CONNECT_INPAGE_METRIMASK) {
+  if (
+    event.data.message &&
+    event.data.message.type === API_TYPE.CONNECT_INPAGE_METRIMASK
+  ) {
     // Inject scripts
     await injectAllScripts();
 
@@ -27,16 +41,16 @@ async function setupLongLivedConnection(event: MessageEvent) {
         // content script -> inpage and/or Dapp event listener
         postWindowMessage(TARGET_NAME.INPAGE, {
           type: API_TYPE.SEND_INPAGE_METRIMASK_ACCOUNT_VALUES,
-          payload: msg.accountWrapper,
+          payload: msg.accountWrapper
         });
       }
     });
 
     /*
-    * Triggers when port is disconnected from other end, such as when extension is
-    * uninstalled, but only if a long-lived connection was created first.
-    * Does not trigger when user closes the tab, or navigates to another page.
-    */
+     * Triggers when port is disconnected from other end, such as when extension is
+     * uninstalled, but only if a long-lived connection was created first.
+     * Does not trigger when user closes the tab, or navigates to another page.
+     */
     port.onDisconnect.addListener(() => {
       handlePortDisconnected();
     });
@@ -44,27 +58,27 @@ async function setupLongLivedConnection(event: MessageEvent) {
     // request inpageAccount values from bg script
     postWindowMessage(TARGET_NAME.CONTENTSCRIPT, {
       type: API_TYPE.GET_INPAGE_METRIMASK_ACCOUNT_VALUES,
-      payload: {},
+      payload: {}
     });
   }
 }
 
 /*
-* This only partially resets the webpage to its pre-connected state. We remove the
-* event listeners and set window.metrimask back to undefined, but there is no
-* way to uninject the content scripts. This is not a big deal though as without a
-* MetriMask installation, the content scripts won't do anything (neither will the
-* event listeners, but we can remove them so we may as well).
-* And as long as the dapp implements the handleMetriMaskInstalledOrUpdated event
-* listener, the page will be refreshed if MetriMask is reinstalled.
-*/
+ * This only partially resets the webpage to its pre-connected state. We remove the
+ * event listeners and set window.metrimask back to undefined, but there is no
+ * way to uninject the content scripts. This is not a big deal though as without a
+ * MetriMask installation, the content scripts won't do anything (neither will the
+ * event listeners, but we can remove them so we may as well).
+ * And as long as the dapp implements the handleMetriMaskInstalledOrUpdated event
+ * listener, the page will be refreshed if MetriMask is reinstalled.
+ */
 function handlePortDisconnected() {
   window.removeEventListener('message', handleInPageMessage, false);
   window.removeEventListener('message', setupLongLivedConnection, false);
 
   postWindowMessage(TARGET_NAME.INPAGE, {
     type: API_TYPE.PORT_DISCONNECTED,
-    payload: {},
+    payload: {}
   });
 }
 
@@ -72,88 +86,105 @@ function handleRPCRequest(message: IRPCCallRequest) {
   const { method, args, id } = message;
 
   // Check for logged in account first
-  chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_LOGGED_IN_ACCOUNT }, (account: ICurrentAccount) => {
-    if (!account) {
-      // Not logged in, send error response to Inpage
-      postWindowMessage<IRPCCallResponse>(TARGET_NAME.INPAGE, {
-        type: API_TYPE.RPC_RESPONSE,
-        payload: {
-          id,
-          error: 'Not logged in. Please log in to MetriMask first.',
-        },
-      });
-      return;
-    }
-
-    switch (method) {
-      case RPC_METHOD.SEND_TO_CONTRACT:
-        // Inpage shows sign tx popup
-        postWindowMessage<IRPCCallRequest>(TARGET_NAME.INPAGE, {
-          type: API_TYPE.RPC_SEND_TO_CONTRACT,
+  chrome.runtime.sendMessage(
+    { type: MESSAGE_TYPE.GET_LOGGED_IN_ACCOUNT },
+    (account: ICurrentAccount) => {
+      if (!account) {
+        // Not logged in, send error response to Inpage
+        postWindowMessage<IRPCCallResponse>(TARGET_NAME.INPAGE, {
+          type: API_TYPE.RPC_RESPONSE,
           payload: {
-            ...message,
-            account,
-          },
+            id,
+            error: 'Not logged in. Please log in to MetriMask first.'
+          }
         });
-        break;
-      case RPC_METHOD.CALL_CONTRACT:
-        // Background executes callcontract
-        chrome.runtime.sendMessage({ type: MESSAGE_TYPE.EXTERNAL_CALL_CONTRACT, id, args });
-        break;
-      default:
-        throw Error('Unhandled RPC method.');
+        return;
+      }
+
+      switch (method) {
+        case RPC_METHOD.SEND_TO_CONTRACT:
+          // Inpage shows sign tx popup
+          postWindowMessage<IRPCCallRequest>(TARGET_NAME.INPAGE, {
+            type: API_TYPE.RPC_SEND_TO_CONTRACT,
+            payload: {
+              ...message,
+              account
+            }
+          });
+          break;
+        case RPC_METHOD.CALL_CONTRACT:
+          // Background executes callcontract
+          chrome.runtime.sendMessage({
+            type: MESSAGE_TYPE.EXTERNAL_CALL_CONTRACT,
+            id,
+            args
+          });
+          break;
+        default:
+          throw Error('Unhandled RPC method.');
+      }
     }
-  });
+  );
 }
 
 function handleRPCSignMessageRequest(message: IRPCSignMessageRequest) {
   const { id } = message;
 
   // Check for logged in account first
-  chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_LOGGED_IN_ACCOUNT }, (account: ICurrentAccount) => {
-    if (!account) {
-      // Not logged in, send error response to Inpage
-      postWindowMessage<IRPCCallResponse>(TARGET_NAME.INPAGE, {
-        type: API_TYPE.RPC_RESPONSE,
-        payload: {
-          id,
-          error: 'Not logged in. Please log in to MetriMask first.',
-        },
-      });
-      return;
-    }
+  chrome.runtime.sendMessage(
+    { type: MESSAGE_TYPE.GET_LOGGED_IN_ACCOUNT },
+    (account: ICurrentAccount) => {
+      if (!account) {
+        // Not logged in, send error response to Inpage
+        postWindowMessage<IRPCCallResponse>(TARGET_NAME.INPAGE, {
+          type: API_TYPE.RPC_RESPONSE,
+          payload: {
+            id,
+            error: 'Not logged in. Please log in to MetriMask first.'
+          }
+        });
+        return;
+      }
 
-    // Inpage shows sign tx popup
-    postWindowMessage<IRPCSignMessageRequest>(TARGET_NAME.INPAGE, {
-      type: API_TYPE.RPC_SIGN_MESSAGE,
-      payload: {
-        ...message,
-        account,
-      },
-    });
-  });
+      // Inpage shows sign tx popup
+      postWindowMessage<IRPCSignMessageRequest>(TARGET_NAME.INPAGE, {
+        type: API_TYPE.RPC_SIGN_MESSAGE,
+        payload: {
+          ...message,
+          account
+        }
+      });
+    }
+  );
 }
 
 function handleRPCVerifyMessageRequest(message: IRPCVerifyMessageRequest) {
-  const { id, args} = message;
+  const { id, args } = message;
 
   // Check for logged in account first
-  chrome.runtime.sendMessage({ type: MESSAGE_TYPE.GET_LOGGED_IN_ACCOUNT }, (account: ICurrentAccount) => {
-    if (!account) {
-      // Not logged in, send error response to Inpage
-      postWindowMessage<IRPCCallResponse>(TARGET_NAME.INPAGE, {
-        type: API_TYPE.RPC_RESPONSE,
-        payload: {
-          id,
-          error: 'Not logged in. Please log in to MetriMask first.',
-        },
-      });
-      return;
-    }
+  chrome.runtime.sendMessage(
+    { type: MESSAGE_TYPE.GET_LOGGED_IN_ACCOUNT },
+    (account: ICurrentAccount) => {
+      if (!account) {
+        // Not logged in, send error response to Inpage
+        postWindowMessage<IRPCCallResponse>(TARGET_NAME.INPAGE, {
+          type: API_TYPE.RPC_RESPONSE,
+          payload: {
+            id,
+            error: 'Not logged in. Please log in to MetriMask first.'
+          }
+        });
+        return;
+      }
 
-    // Background execte message verification
-    chrome.runtime.sendMessage({ type: MESSAGE_TYPE.EXTERNAL_VERIFY_MESSAGE, id, args });
-  });
+      // Background execte message verification
+      chrome.runtime.sendMessage({
+        type: MESSAGE_TYPE.EXTERNAL_VERIFY_MESSAGE,
+        id,
+        args
+      });
+    }
+  );
 }
 
 // Forwards the request to the bg script
@@ -189,10 +220,11 @@ function handleInPageMessage(event: MessageEvent) {
 // Handle messages sent from bg script -> content script(here) -> inpage
 function handleBackgroundScriptMessage(message: any) {
   switch (message.type) {
+    case MESSAGE_TYPE.METRIMASK_WINDOW_CLOSE:
     case MESSAGE_TYPE.EXTERNAL_RPC_CALL_RETURN:
       postWindowMessage<IRPCCallResponse>(TARGET_NAME.INPAGE, {
         type: API_TYPE.RPC_RESPONSE,
-        payload: message,
+        payload: message
       });
       break;
     default:
