@@ -105,7 +105,7 @@ export default class SessionController extends IController {
       }
     } catch (err) {
       console.error(err);
-      this.main.displayErrorOnPopup(err);
+      this.main.displayErrorOnPopup(err as Error);
     }
   }
 }
